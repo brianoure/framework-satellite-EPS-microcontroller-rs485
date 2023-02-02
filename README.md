@@ -37,4 +37,4 @@ Whereas the EPS receives a - 56 bit command frame - from the OBC that consists o
 
 The image below illustrates the connections
 <br />
-![How the EPS and OBC microcontrollers connect](https://raw.githubusercontent.com/brianoure/satellite-EPS-microcontroller-i2c/main/I2C_EPS_OBC_connection_github_model.png)
+![How the EPS and OBC microcontrollers connect](https://raw.githubusercontent.com/brianoure/satellite-EPS-microcontroller-rs485/main/rs485_4_wire_full_duplex.png)

@@ -1,7 +1,5 @@
 # satellite-EPS-microcontroller-rs485
-A model Electrical Power Subsystem (EPS) microcontroller program but communicating with an (On Board Computer)OBC using the rs485 protocol in Python3 and C.<br />
-
-In this case satellite system, the EPS microntroller communicates with the On Board Computer (OBC) microcontroller using the rs485 protocol.<br />
+A model Electrical Power Subsystem (EPS) microcontroller program for communicating with an (On Board Computer)OBC using the rs485 protocol in Python3 and C.<br />
 
 The rs485 - 4 wire - channel requires five lines - 2 signal pairs (i.e TXPOS,TXNEG,RXPOS,RXNEG) and 1 ground (GND) are implemented to
 enable transmission and reception of packets between the OBC and the EPS respective microcontrollers.
@@ -22,7 +20,7 @@ As for telemetry data, the EPS outputs a - 56 bit telemetry frame - to the OBC s
 | Solar Panel Array4 output voltage              | 5             | 0 to 32 (integer value for voltage range)          |
 | 8 cell Battery voltage (4S2P arrangement)      | 5             | 0 to 32 (integer value for voltage range - for a maximum output of 4V per cell, the highest yield should be 16V) |
 | Battery temperature                            | 9             | -255 to 256(valid frame ending identifier constant)|
-| Battery heater                                 | 1             | 1(heater is ON) or 0(heater is OFF)                |
+| Battery heater state                           | 1             | 1(heater is ON) or 0(heater is OFF)                |
 | Tail (Least significant)                       | 8             | 135(valid frame ending identifier constant)        |
 
 Whereas the EPS receives a - 56 bit command frame - from the OBC that consists of the following information; (MSB to LSB/ Left to Right/First to Last)

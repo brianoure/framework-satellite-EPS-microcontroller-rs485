@@ -126,8 +126,8 @@ while(True):##MAIN WHILE
     ##OBC TO EPS......COMMAND##
     if( read_bit_from_OBC()==1 ) : 
        WORD_FROM_OBC_56BIT = (WORD_FROM_OBC_56BIT | (  1<<(55-position56) )) #store 1 bit at position
-       while( read_bit_from_OBC()==1 ):pass #wait for the current bit transmission to run its course
-       while( read_bit_from_OBC()==3 ):pass #wait for the intermission to pass
+       while( read_bit_from_OBC()==1 ):pass #wait for the current bit transmission to run its course. No defined wait times/ asynchronous
+       while( read_bit_from_OBC()==3 ):pass #wait for the intermission to pass. No defined wait times/asynchronous
     if( read_bit_from_OBC()==0 ) :
        WORD_FROM_OBC_56BIT = (WORD_FROM_OBC_56BIT & (~(1<<(55-position56)))) #store 0 bit at position
        while( read_bit_from_OBC()==0 ):pass #wait for the current bit transmission to run its course

@@ -138,7 +138,7 @@ while(True):##MAIN WHILE
        while( read_bit_from_OBC()==3 ):pass #wait for the intermission to pass
     #
     #Check if we have any commands issued in the command frame
-    """making copies to prevent altreation to original data"""
+    """making copies to prevent alteration to original data"""
     WORD_FROM_OBC_56BIT_copy1 = WORD_FROM_OBC_56BIT
     WORD_FROM_OBC_56BIT_copy2 = WORD_FROM_OBC_56BIT
     WORD_FROM_OBC_56BIT_copy3 = WORD_FROM_OBC_56BIT
@@ -155,7 +155,7 @@ while(True):##MAIN WHILE
        if( ((WORD_FROM_OBC_56BIT_copy7>>8 )&255 ) == COMMAND_XBAND_ON_8BIT    ) : command_xband_ON()
        if( ((WORD_FROM_OBC_56BIT_copy8>>8 )&255 ) == COMMAND_XBAND_OFF_8BIT   ) : command_xband_OFF()
     ##EPS TO OBC.......TELEMETRY##
-    """making copies to prevent altreation to original data"""
+    """making copies to prevent alteration to original data"""
     TELEMETRY_STARTING_OUT_8BIT_copy = TELEMETRY_STARTING_OUT_8BIT
     TELEMETRY_ENDING_OUT_8BIT_copy   = TELEMETRY_ENDING_OUT_8BIT
     WORD_TO_OBC_56BIT =  ( 

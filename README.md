@@ -1,4 +1,4 @@
-# satellite-EPS-microcontroller-rs485
+# framework-satellite-EPS-microcontroller-rs485
 A framework model Electrical Power Subsystem (EPS) microcontroller program for communicating with an (On Board Computer)OBC using the rs485 protocol in Python3 and C.(The code can be customised/translated  to target a specific microcontroller).<br />
 
 The rs485 - 4 wire - channel requires five lines - 2 signal pairs (i.e TXPOS,TXNEG,RXPOS,RXNEG) and 1 ground (GND) are implemented to

@@ -26,7 +26,7 @@ COMMAND_HEATER_OFF_8BIT   = 213   #constant indicating that the OBC wants the EP
 COMMAND_ENDING_IN_8BIT    = 135   #constant identifying the command frame tail/end
 
 """STM32 OUTPUT TO OBC, the telemetry we're sending to the OBC and the specified frame constants"""
-TELEMETRY_STARTING_OUT_8BIT   = "ALAS" #constantidentifying the telemetry frame header/start
+TELEMETRY_STARTING_OUT_8BIT   = 195   #constantidentifying the telemetry frame header/start
 TELEMETRY_ENDING_OUT_8BIT     = 135   #constant  identifying the telemetry frame tail/end
 
 #TELEMETRY CAPTURE

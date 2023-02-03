@@ -2,7 +2,7 @@
 OBC master, EPS slave
 RS485 protocol (4 wire) : TXPOS, TXNEG, RXPOS, RXNEG, GND
 """
-bit_captured_flag = 0 #flag indicating whether a bit has been captured or not
+bit_captured_flag = False #flag indicating whether a bit has been captured or not
 
 PAYLOAD_POWER = 0 #initialisation
 UHF_POWER     = 0 #initialisation

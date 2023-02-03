@@ -87,7 +87,7 @@ def read_bit_from_OBC(): #return 1 or 0
     if( (not read_PIN_RXPOS_FROM_OBC()) and  (    read_PIN_RXNEG_FROM_OBC()) ): return 0
     if( (    read_PIN_RXPOS_FROM_OBC()) and  (not read_PIN_RXNEG_FROM_OBC()) ): return 1
     if( (    read_PIN_RXPOS_FROM_OBC()) and  (    read_PIN_RXNEG_FROM_OBC()) ): return 3 #intermission, waiting for the next bit
-    else: return 0
+    else: return 3
     
 #COMMAND EXECUTION
 def command_payload_ON():

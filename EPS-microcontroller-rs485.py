@@ -134,13 +134,21 @@ while(True):##MAIN WHILE
        while( read_bit_from_OBC()==3 ):pass #wait for the intermission to pass
     #
     #Check if we have any commands issued in the command frame
-    if( ((WORD_FROM_OBC_56BIT>>32) == COMMAND_STARTING_IN_16BIT) and ((WORD_FROM_OBC_56BIT&255) == COMMAND_ENDING_IN_8BIT) ):  #start and end validation
-       if( ((WORD_FROM_OBC_56BIT>>24)&255 ) == COMMAND_PAYLOAD_ON_8BIT  ) : command_payload_ON()
-       if( ((WORD_FROM_OBC_56BIT>>24)&255 ) == COMMAND_PAYLOAD_OFF_8BIT ) : command_payload_OFF()
-       if( ((WORD_FROM_OBC_56BIT>>16)&255 ) == COMMAND_UHF_ON_8BIT      ) : command_uhf_ON()
-       if( ((WORD_FROM_OBC_56BIT>>16)&255 ) == COMMAND_UHF_OFF_8BIT     ) : command_uhf_OFF()
-       if( ((WORD_FROM_OBC_56BIT>>8 )&255 ) == COMMAND_XBAND_ON_8BIT    ) : command_xband_ON()
-       if( ((WORD_FROM_OBC_56BIT>>8 )&255 ) == COMMAND_XBAND_OFF_8BIT   ) : command_xband_OFF()
+    WORD_FROM_OBC_56BIT_copy1 = WORD_FROM_OBC_56BIT
+    WORD_FROM_OBC_56BIT_copy2 = WORD_FROM_OBC_56BIT
+    WORD_FROM_OBC_56BIT_copy3 = WORD_FROM_OBC_56BIT
+    WORD_FROM_OBC_56BIT_copy4 = WORD_FROM_OBC_56BIT
+    WORD_FROM_OBC_56BIT_copy5 = WORD_FROM_OBC_56BIT
+    WORD_FROM_OBC_56BIT_copy6 = WORD_FROM_OBC_56BIT
+    WORD_FROM_OBC_56BIT_copy7 = WORD_FROM_OBC_56BIT
+    WORD_FROM_OBC_56BIT_copy8 = WORD_FROM_OBC_56BIT
+    if( ((WORD_FROM_OBC_56BIT_copy1>>40) == COMMAND_STARTING_IN_16BIT) and ((WORD_FROM_OBC_56BIT_copy2&255) == COMMAND_ENDING_IN_8BIT) ):  #start and end validation
+       if( ((WORD_FROM_OBC_56BIT_copy3>>24)&255 ) == COMMAND_PAYLOAD_ON_8BIT  ) : command_payload_ON()
+       if( ((WORD_FROM_OBC_56BIT_copy4>>24)&255 ) == COMMAND_PAYLOAD_OFF_8BIT ) : command_payload_OFF()
+       if( ((WORD_FROM_OBC_56BIT_copy5>>16)&255 ) == COMMAND_UHF_ON_8BIT      ) : command_uhf_ON()
+       if( ((WORD_FROM_OBC_56BIT_copy6>>16)&255 ) == COMMAND_UHF_OFF_8BIT     ) : command_uhf_OFF()
+       if( ((WORD_FROM_OBC_56BIT_copy7>>8 )&255 ) == COMMAND_XBAND_ON_8BIT    ) : command_xband_ON()
+       if( ((WORD_FROM_OBC_56BIT_copy8>>8 )&255 ) == COMMAND_XBAND_OFF_8BIT   ) : command_xband_OFF()
     ##EPS TO OBC.......TELEMETRY##
     WORD_TO_OBC_56BIT =  ( 
                            (TELEMETRY_STARTING_OUT_8BIT<<48)     | 

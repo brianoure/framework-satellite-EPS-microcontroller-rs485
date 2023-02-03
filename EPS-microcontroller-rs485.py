@@ -2,6 +2,7 @@
 OBC master, EPS slave
 RS485 protocol (4 wire) : TXPOS, TXNEG, RXPOS, RXNEG, GND
 """
+bit_captured_flag = 0 #flag indicating whether a bit has been captured or not
 
 PAYLOAD_POWER = 0 #initialisation
 UHF_POWER     = 0 #initialisation
@@ -119,21 +120,25 @@ while(True):##MAIN WHILE
     #reset the counters appropriately
     #one counter required since both vommand and telemtry frames have EQUAL lengths (56 bit)
     if (position56  == 56) : position56 = 0 #0 to 55, bit position counter reset
+    if(bit_captured_flag==True) : bit_captured_flag=False
     #
     #runs once all four release switches have been activated
     if( RELEASE_ONE() and RELEASE_TWO() and RELEASE_THREE() and RELEASE_FOUR() ): deploy_PANELS()
     #
     ##OBC TO EPS......COMMAND##
-    if( read_bit_from_OBC()==1 ) : 
+    if( read_bit_from_OBC()==1 and (not bit_captured_flag) ) : 
        WORD_FROM_OBC_56BIT = (WORD_FROM_OBC_56BIT | (  1<<(55-position56) )) #store 1 bit at position
-       while( read_bit_from_OBC()==1 ):pass #wait for the current bit transmission to run its course. No defined wait times/ asynchronous
+       bit_captured_flag = True
+       while( read_bit_from_OBC()==1 ):pass #wait for the current bit transmission to run its course. No defined wait times/asynchronous
        while( read_bit_from_OBC()==3 ):pass #wait for the intermission to pass. No defined wait times/asynchronous
-    if( read_bit_from_OBC()==0 ) :
+    if( read_bit_from_OBC()==0 and (not bit_captured_flag)) :
        WORD_FROM_OBC_56BIT = (WORD_FROM_OBC_56BIT & (~(1<<(55-position56)))) #store 0 bit at position
+       bit_captured_flag = True
        while( read_bit_from_OBC()==0 ):pass #wait for the current bit transmission to run its course
        while( read_bit_from_OBC()==3 ):pass #wait for the intermission to pass
     #
     #Check if we have any commands issued in the command frame
+    """making copies to prevent altreation to original data"""
     WORD_FROM_OBC_56BIT_copy1 = WORD_FROM_OBC_56BIT
     WORD_FROM_OBC_56BIT_copy2 = WORD_FROM_OBC_56BIT
     WORD_FROM_OBC_56BIT_copy3 = WORD_FROM_OBC_56BIT
@@ -150,8 +155,11 @@ while(True):##MAIN WHILE
        if( ((WORD_FROM_OBC_56BIT_copy7>>8 )&255 ) == COMMAND_XBAND_ON_8BIT    ) : command_xband_ON()
        if( ((WORD_FROM_OBC_56BIT_copy8>>8 )&255 ) == COMMAND_XBAND_OFF_8BIT   ) : command_xband_OFF()
     ##EPS TO OBC.......TELEMETRY##
+    """making copies to prevent altreation to original data"""
+    TELEMETRY_STARTING_OUT_8BIT_copy = TELEMETRY_STARTING_OUT_8BIT
+    TELEMETRY_ENDING_OUT_8BIT_copy   = TELEMETRY_ENDING_OUT_8BIT
     WORD_TO_OBC_56BIT =  ( 
-                           (TELEMETRY_STARTING_OUT_8BIT<<48)     | 
+                          (TELEMETRY_STARTING_OUT_8BIT_copy<<48) | 
                            (telemetry_payload_STATE()<<46)       |
                            (telemetry_uhf_STATE()<<45)           |
                            (telemetry_xband_STATE()<<43)         |
@@ -162,7 +170,7 @@ while(True):##MAIN WHILE
                            (telemetry_battery_VOLTAGE()<<18)     |
                            (telemetry_battery_TEMPERATURE()<<9 ) |
                            (telemetry_battery_HEATER()<<8 )      |
-                           TELEMETRY_ENDING_OUT_8BIT
+                           TELEMETRY_ENDING_OUT_8BIT_copy
                          )
     write_bit_to_OBC( WORD_TO_OBC_56BIT & (1<<(55-position56)) )
     #

@@ -10,9 +10,10 @@ XBAND_POWER   = 0 #initialisation
 HEATER_POWER  = 0 #initialisation
 
 """Initalising variables"""
-position56          = 0
-WORD_FROM_OBC_56BIT = 0
-WORD_TO_OBC_56BIT   = 0
+command_position56   = 0
+telemetry_position56 = 0
+WORD_FROM_OBC_56BIT  = 0
+WORD_TO_OBC_56BIT    = 0
 
 """STM32 INPUT FROM OBC, the instructions we're receiving from the OBC and the specified frame constants"""
 COMMAND_STARTING_IN_16BIT = 34539 #constant identifying the command frame header/start
@@ -119,7 +120,8 @@ def deploy_PANELS():pass#activate motors/ release springs to deploy panels, UNDE
 while(True):##MAIN WHILE
     #reset the counters appropriately
     #one counter required since both vommand and telemtry frames have EQUAL lengths (56 bit)
-    if (position56  == 56) : position56 = 0 #0 to 55, bit position counter reset
+    if (telemetry_position56  == 56) : telemetry_position56 = 0 #0 to 55, bit position counter reset
+    if (command_position56    == 56) : command_position56   = 0 #0 to 55, bit position counter reset
     if(bit_captured_flag==True) : bit_captured_flag=False
     #
     #runs once all four release switches have been activated
@@ -127,12 +129,12 @@ while(True):##MAIN WHILE
     #
     ##OBC TO EPS......COMMAND##
     if( read_bit_from_OBC()==1 and (not bit_captured_flag) ) : 
-       WORD_FROM_OBC_56BIT = (WORD_FROM_OBC_56BIT | (  1<<(55-position56) )) #store 1 bit at position
+       WORD_FROM_OBC_56BIT = (WORD_FROM_OBC_56BIT | (  1<<(55-command_position56) )) #store 1 bit at position
        bit_captured_flag = True
        while( read_bit_from_OBC()==1 ):pass #wait for the current bit transmission to run its course. No defined wait times/asynchronous
        while( read_bit_from_OBC()==3 ):pass #wait for the intermission to pass. No defined wait times/asynchronous
     if( read_bit_from_OBC()==0 and (not bit_captured_flag)) :
-       WORD_FROM_OBC_56BIT = (WORD_FROM_OBC_56BIT & (~(1<<(55-position56)))) #store 0 bit at position
+       WORD_FROM_OBC_56BIT = (WORD_FROM_OBC_56BIT & (~(1<<(55-command_position56)))) #store 0 bit at position
        bit_captured_flag = True
        while( read_bit_from_OBC()==0 ):pass #wait for the current bit transmission to run its course
        while( read_bit_from_OBC()==3 ):pass #wait for the intermission to pass
@@ -172,8 +174,9 @@ while(True):##MAIN WHILE
                            (telemetry_battery_HEATER()<<8 )      |
                            TELEMETRY_ENDING_OUT_8BIT_copy
                          )
-    write_bit_to_OBC( WORD_TO_OBC_56BIT & (1<<(55-position56)) )
+    write_bit_to_OBC( WORD_TO_OBC_56BIT & (1<<(55-telemetry_position56)) )
     #
     #increment the position counters
-    position56 = position56+1
+    command_position56 = command_position56+1
+    telemetry_position56 = telemetry_position56+1
 #MAIN WHILE

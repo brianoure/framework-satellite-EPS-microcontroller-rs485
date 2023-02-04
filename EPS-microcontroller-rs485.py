@@ -77,12 +77,18 @@ def set_PIN_TXNEG_TO_OBC(value):
     if (not value):pass#write a low  to TXNEG UNDEFINED
     else:          pass#HIGH IMPEDANCE to TXNEG UNDEFINED
 def write_bit_to_OBC(bit_value):
-    if(bit_value==1 or bit_value==True):
+    if(bit_value==1 ):
         set_PIN_TXPOS_TO_OBC( 1 )
         set_PIN_TXNEG_TO_OBC( 0 )
-    if(bit_value==0 or bit_value==False):
+    if(bit_value==0 ):
         set_PIN_TXPOS_TO_OBC( 0 )
         set_PIN_TXNEG_TO_OBC( 1 )
+    if(bit_value==3 ):
+        set_PIN_TXPOS_TO_OBC( 1 )
+        set_PIN_TXNEG_TO_OBC( 1 )
+    else:
+        set_PIN_TXPOS_TO_OBC( 0 )
+        set_PIN_TXNEG_TO_OBC( 0 )
 def read_bit_from_OBC(): #return 1 or 0
     if( (not read_PIN_RXPOS_FROM_OBC()) and  (not read_PIN_RXNEG_FROM_OBC()) ): return 3 #intermission, waiting for the next bit
     if( (not read_PIN_RXPOS_FROM_OBC()) and  (    read_PIN_RXNEG_FROM_OBC()) ): return 0
@@ -174,7 +180,11 @@ while(True):##MAIN WHILE
                            (telemetry_battery_HEATER()<<8 )      |
                            TELEMETRY_ENDING_OUT_8BIT_copy
                          )
-    write_bit_to_OBC( WORD_TO_OBC_56BIT & (1<<(55-telemetry_position56)) )
+    current_bit_to_transmit =  WORD_TO_OBC_56BIT & (1<<(55-telemetry_position56))
+    write_bit_to_OBC( current_bit_to_transmit )
+    for j in range(100000):pass
+    write_bit_to_OBC( 3 ) #change to intermission
+    for j in range(100000):pass
     #
     #increment the position counters
     command_position56 = command_position56+1

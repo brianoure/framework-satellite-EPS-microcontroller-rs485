@@ -128,18 +128,18 @@ while(True):##MAIN WHILE
     #one counter required since both vommand and telemtry frames have EQUAL lengths (56 bit)
     if (telemetry_position56  == 56) : telemetry_position56 = 0 #0 to 55, bit position counter reset
     if (command_position56    == 56) : command_position56   = 0 #0 to 55, bit position counter reset
-    if(bit_captured_flag==True) : bit_captured_flag=False
+    if (bit_captured_flag==True)     : bit_captured_flag=False
     #
     #runs once all four release switches have been activated
     if( RELEASE_ONE() and RELEASE_TWO() and RELEASE_THREE() and RELEASE_FOUR() ): deploy_PANELS()
     #
     ##OBC TO EPS......COMMAND##
-    if( read_bit_from_OBC()==1 and (not bit_captured_flag) ) : 
+    if( (read_bit_from_OBC()==1) and (not bit_captured_flag) ) : 
        WORD_FROM_OBC_56BIT = (WORD_FROM_OBC_56BIT | (  1<<(55-command_position56) )) #store 1 bit at position
        bit_captured_flag = True
        while( read_bit_from_OBC()==1 ):pass #wait for the current bit transmission to run its course. No defined wait times/asynchronous
        while( read_bit_from_OBC()==3 ):pass #wait for the intermission to pass. No defined wait times/asynchronous
-    if( read_bit_from_OBC()==0 and (not bit_captured_flag)) :
+    if( (read_bit_from_OBC()==0) and (not bit_captured_flag)) :
        WORD_FROM_OBC_56BIT = (WORD_FROM_OBC_56BIT & (~(1<<(55-command_position56)))) #store 0 bit at position
        bit_captured_flag = True
        while( read_bit_from_OBC()==0 ):pass #wait for the current bit transmission to run its course
@@ -165,7 +165,7 @@ while(True):##MAIN WHILE
     ##EPS TO OBC.......TELEMETRY##
     """making copies to prevent alteration to original data"""
     TELEMETRY_STARTING_OUT_8BIT_copy = TELEMETRY_STARTING_OUT_8BIT
-    TELEMETRY_ENDING_OUT_8BIT_copy   = TELEMETRY_ENDING_OUT_8BIT
+    #TELEMETRY_ENDING_OUT_8BIT_copy   = TELEMETRY_ENDING_OUT_8BIT unnecessary since the value is not bit shifted
     WORD_TO_OBC_56BIT =  ( 
                           (TELEMETRY_STARTING_OUT_8BIT_copy<<48) | 
                            (telemetry_payload_STATE()<<46)       |
@@ -178,15 +178,15 @@ while(True):##MAIN WHILE
                            (telemetry_battery_VOLTAGE()<<18)     |
                            (telemetry_battery_TEMPERATURE()<<9 ) |
                            (telemetry_battery_HEATER()<<8 )      |
-                           TELEMETRY_ENDING_OUT_8BIT_copy
+                           TELEMETRY_ENDING_OUT_8BIT
                          )
     current_bit_to_transmit =  WORD_TO_OBC_56BIT & (1<<(55-telemetry_position56))
     write_bit_to_OBC( current_bit_to_transmit )
-    for j in range(100000):pass
+    for j in range(100000):pass #waiting/pausing. Adjust the count with respect to the computer clock frequency (eg 48MHZ clock would last 0.00203 ms) 
     write_bit_to_OBC( 3 ) #change to intermission
-    for j in range(100000):pass
+    for k in range(100000):pass #waiting/pausing.
     #
     #increment the position counters
-    command_position56 = command_position56+1
+    command_position56   = command_position56  +1
     telemetry_position56 = telemetry_position56+1
 #MAIN WHILE
